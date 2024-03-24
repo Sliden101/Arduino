@@ -1,5 +1,5 @@
 //bullshit values
-unsigned long startTime = 1711271654; //change everytime u reset, https://www.unixtimestamp.com/index.php
+unsigned long startTime = 1711291853; //change everytime u reset, https://www.unixtimestamp.com/index.php
 unsigned long bacII = 1728320400; 
 unsigned long khensBday = 1731603600; 
 //add new values for whatever date u wanna count to
@@ -29,8 +29,8 @@ void loop() {
   long timeDiff = timeDiffBac; //I'm not adding switching logic
 
   int days = timeDiff / 86400;
-  int hours = (timeDiff % (24 * 3600)) / 3600;
-  int minutes = (timeDiff % 3600) / 60;
+  int hours = timeDiff % 86400 / 3600;
+  int minutes = timeDiff % 3600 / 60;
   int seconds = (timeDiff % 3600) % 60;
   
   String d = String(days);
@@ -44,12 +44,12 @@ void loop() {
   String bacii = String("BacII in:");
 
   String statement = bacii;
+
   lcd.setCursor(0, 0);
   lcd.print(statement);
   lcd.setCursor(0, 1);
   lcd.print(debug);
   delay(1000); 
   lcd.clear();
-
 
 }
