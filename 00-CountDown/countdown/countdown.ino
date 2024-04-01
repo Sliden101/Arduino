@@ -1,55 +1,65 @@
-//bullshit values
-unsigned long startTime = 1711291853; //change everytime u reset, https://www.unixtimestamp.com/index.php
-unsigned long bacII = 1728320400; 
-unsigned long khensBday = 1731603600; 
-//add new values for whatever date u wanna count to
-//Initially was going to use json and parse but I am lazy
+// now.pde
+// Prints a snapshot of the current date and time along with the UNIX time
+// Modified by Andy Wickert from the JeeLabs / Ladyada RTC library examples
+// 5/15/11
 
-#include <UnixTime.h>
+#include <Wire.h>
+#include <DS3231.h>
 #include "LCDIC2.h"
 
-LCDIC2 lcd(0x27, 16, 2);
-UnixTime stamp(7); //7 for phnom penh cus i live here duh
+unsigned long bacII = 1728320400; 
+unsigned long myBday = 1724864400; 
 
-void setup() {
-  if (lcd.begin()) lcd.print("Hello, World!");
-  lcd.clear();
-  Serial.begin(9600);
+unsigned long graduation = 1719507600; 
+
+RTClib myRTC;
+LCDIC2 lcd(0x27, 16, 2);
+
+void setup () {
+    if (lcd.begin()) lcd.print("Hello, World!");
+    lcd.clear();
+
+    Serial.begin(9600);
+    Wire.begin();
+    delay(500);
+    Serial.println("Ready!");
 }
 
-void loop() {
-  unsigned long currentMili = millis();
-  unsigned long secPassed = currentMili / 1000;
+void loop () {
+        
+    DateTime now = myRTC.now();
+    unsigned long cTime = now.unixtime();
+// 
+    long timeDiffBac = bacII - cTime;
+    long timeDiffGrad = graduation - cTime;
 
-  unsigned long cTime = startTime + secPassed;
+    long timeDiff = timeDiffGrad; //I'm not adding switching logic
 
-  long timeDiffBac = bacII - cTime;
-  long timeDiffKhen = khensBday - cTime;
+    int days = timeDiff / 86400;
+    int hours = timeDiff % 86400 / 3600;
+    int minutes = timeDiff % 3600 / 60;
+    int seconds = (timeDiff % 3600) % 60;
+    
+    String d = String(days);
+    String h = String(hours);
+    String m = String(minutes);
+    String s = String(seconds);
 
-  long timeDiff = timeDiffBac; //I'm not adding switching logic
+    String debug = String(d + "d" + h + "h" + m + "m" + s + "s");
 
-  int days = timeDiff / 86400;
-  int hours = timeDiff % 86400 / 3600;
-  int minutes = timeDiff % 3600 / 60;
-  int seconds = (timeDiff % 3600) % 60;
-  
-  String d = String(days);
-  String h = String(hours);
-  String m = String(minutes);
-  String s = String(seconds);
+    String bacii = String("BacII in:");
+    String grad = String("Grad in:");
 
-  String debug = String(d + "d" + h + "h" + m + "m" + s + "s");
+    String statement = grad;
+    Serial.println(grad);
+    Serial.println(debug);
 
-  String khen = String("Khen's bday in:");
-  String bacii = String("BacII in:");
+    lcd.setCursor(0, 0);
+    lcd.print(statement);
+    lcd.setCursor(0, 1);
+    lcd.print(debug);
+    delay(1000); 
+    lcd.clear();
 
-  String statement = bacii;
-
-  lcd.setCursor(0, 0);
-  lcd.print(statement);
-  lcd.setCursor(0, 1);
-  lcd.print(debug);
-  delay(1000); 
-  lcd.clear();
 
 }
