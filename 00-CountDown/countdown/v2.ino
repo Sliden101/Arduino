@@ -39,7 +39,7 @@ void loop() {
   long timeDiffBac = bacII - timeStamp;
   long timeDiffGrad = graduation - timeStamp;
 
-  long timeDiff = timeDiffGrad; //I'm not adding switching logic
+  long timeDiff = timeDiffBac; //I'm not adding switching logic
 
   int days = timeDiff / 86400;
   int hours = timeDiff % 86400 / 3600;
@@ -56,8 +56,8 @@ void loop() {
     String bacii = String("BacII in:");
     String grad = String("Graduation in:");
 
-    String statement = grad;
-    Serial.println(grad);
+    String statement = bacii;
+    Serial.println(bacii);
     Serial.println(debug);
 
     lcd.setCursor(0, 0);
